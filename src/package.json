@@ -1,0 +1,13 @@
+{
+  "name": "eshop",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start@spa": "cd frontend/spa && npm run start",
+    "start@catalog": "cd services/catalogapi && dotnet run",
+    "start": "concurrently --kill-others \"npm run start@spa\" \"npm run start@catalog\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
