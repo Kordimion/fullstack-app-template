@@ -1,18 +1,25 @@
 version: '3.4'
 
 services:
+  envoygateway:
+    build: gateways/webshopping
+    ports:
+      - "9901:9901"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./gateways/webshopping/envoy.yaml:/etc/envoy/envoy.yaml
+      - ./gateways/certs/https.crt:/etc/ssl/certs/https.crt
+      - ./gateways/certs/key.pem:/etc/ssl/certs/key.pem
+
   catalogapi:
     image: catalogapi
     build:
       context: ./services/catalogapi
       dockerfile: ./Dockerfile
-    ports:
-    - 5142:80
 
   spa:
     image: spa
     build:
       context: ./frontend
       dockerfile: ./Dockerfile
-    ports:
-    - 3000:80

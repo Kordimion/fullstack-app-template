@@ -6,7 +6,7 @@ function App() {
   return (<div>
     <h1>Hello world!</h1>
     <button onClick={async () => {
-      const res = await fetch("http://localhost:5142/WeatherForecast/");
+      const res = await fetch(`${window.location.href}api/catalog/WeatherForecast/`);
       const txt = await res.text();
       setWeather(txt);
     }}>Get Weather</button> 
