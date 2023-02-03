@@ -1,3 +1,6 @@
+# Secret files
+certs/
+
 ## Local history files
 .history/
 .vshistory/

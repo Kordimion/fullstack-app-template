@@ -1,0 +1,6 @@
+// keys for envoy
+openssl req -config https.config -new -out csr.pem
+openssl x509 -req -days 365 -extfile https.config -extensions v3_req -in csr.pem -signkey key.pem -out https.crt
+
+// certificate for asp.net core
+openssl pkcs12 -export -out aspcertificat.pfx -inkey key.pem -in https.crt -passout pass:
