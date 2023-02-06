@@ -1,7 +1,28 @@
 version: '3.4'
 
+volumes:
+    keycloak-data:
+
 services:
 
+  keycloak:
+    image: keycloak
+    build:
+      context: ./sso
+      dockerfile: ./Dockerfile
+    depends_on:
+      - keycloakdb
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+
+  keycloakdb:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=keycloak
+    volumes:
+      - ./sso/realm-export.json:/opt/keycloak/data/import/shop-realm.json
   catalogapi:
     image: catalogapi
     build:
@@ -22,6 +43,7 @@ services:
     environment:
     - BACKEND_CATALOG=catalogapi
     - BASE_URL=localhost
+    - BACKEND_IDENTITY=keycloak
     ports:
       - 80:80
       - 443:443

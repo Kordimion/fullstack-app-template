@@ -4,12 +4,25 @@ import './index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 
+import { AuthProviderProps, AuthProvider } from "oidc-react";
+
+const oidcConfig : AuthProviderProps = {
+  authority: "https://localhost/identity/realms/shop",
+  clientId: 'mainpage.spa.client',
+  scope: "catalog.api.read openid profile",
+  clientSecret: "AGVacqRHpG5PXbUXpaQ0kKiXartkh5LB",
+  redirectUri: "https://localhost/redirect/",
+  autoSignIn: false,
+};
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider {...oidcConfig}>
+      <App />
+    </AuthProvider>    
   </React.StrictMode>
 );
 

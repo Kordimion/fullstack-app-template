@@ -7,6 +7,13 @@
 #                             '"$http_user_agent" "$http_x_forwarded_for"';
 # access_log  /etc/logs/nginxssl_access.log  upstream_log;
 
+fastcgi_buffers 16 16k; 
+fastcgi_buffer_size 32k;
+
+proxy_buffer_size   128k;
+proxy_buffers   4 256k;
+proxy_busy_buffers_size   256k;
+
 # nginx-proxy version : 1.0.4-8-g2f89856
 # If we receive X-Forwarded-Proto, pass it through; otherwise, pass along the
 # scheme used to connect to this server
@@ -101,5 +108,9 @@ server {
 
   location /api/catalog/ {
       proxy_pass http://${BACKEND_CATALOG}/;
+  }
+
+  location ~ /identity/ {
+      proxy_pass http://keycloak:8080;
   }   
 }
