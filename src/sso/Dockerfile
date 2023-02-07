@@ -20,6 +20,5 @@ ENV KC_HTTP_ENABLED=true
 ENV PROXY_ADDRESS_FORWARDING=true
 ENV KC_PROXY=edge
 
-
 RUN /opt/keycloak/bin/kc.sh build --db=postgres
-ENTRYPOINT /opt/keycloak/bin/kc.sh start
+ENTRYPOINT /opt/keycloak/bin/kc.sh start --import-realm

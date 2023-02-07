@@ -6,14 +6,16 @@ volumes:
 services:
 
   keycloak:
-    image: keycloak
-    build:
-      context: ./sso
+    image: sso
+    build: 
+      context: sso
       dockerfile: ./Dockerfile
+    volumes:
+      - ./sso/realm.json:/opt/keycloak/data/import/realm.json
+    environment:
+      - MAINPAGE_SPA_SECRET=AGVacqRHpG5PXbUXpaQ0kKiXartkh5LB
     depends_on:
       - keycloakdb
-    volumes:
-      - keycloak-data:/var/lib/postgresql/data
 
   keycloakdb:
     image: postgres:latest
@@ -22,7 +24,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=keycloak
     volumes:
-      - ./sso/realm-export.json:/opt/keycloak/data/import/shop-realm.json
+      - keycloak-data:/var/lib/postgresql/data
   catalogapi:
     image: catalogapi
     build:
