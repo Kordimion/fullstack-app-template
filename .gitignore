@@ -1,5 +1,7 @@
 # Secret files
 certs/
+gitlab-credentials1.yaml
+deployment/**/.env
 
 ## Local history files
 .history/

@@ -672,18 +672,18 @@
     {
       "id": "9e668b2a-4d9b-4fe3-abdb-1d566b36e7ba",
       "clientId": "mainpage.spa.client",
-      "name": "Main page ",
+      "name": "Main page",
       "description": "Single Page Application",
-      "rootUrl": "https://localhost",
+      "rootUrl": "${MAINPAGE_SPA_CLIENT_HREF}",
       "adminUrl": "",
       "baseUrl": "",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": true,
       "clientAuthenticatorType": "client-secret",
-      "secret": "${MAINPAGE_SPA_SECRET}",
+      "secret": "${MAINPAGE_SPA_CLIENT_SECRET}",
       "redirectUris": [
-        "https://localhost/redirect/"
+        "${MAINPAGE_SPA_CLIENT_REDIRECT_URI}"
       ],
       "webOrigins": [
         "+"

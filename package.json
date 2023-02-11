@@ -1,0 +1,24 @@
+{
+  "name": "eshop",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "kubectl:context:k3s": "kubectl config set current-context k3s",
+    "kubectl:context:minikube": "kubectl config set current-context minikube",
+    "kubectl:context": "kubectl config get-contexts",
+    "dev:misc": "cd src && docker compose -f docker-compose.misc.yml up",
+    "dev:sso": "cd src && docker compose up",
+    "dev:spa": "cd src/services/frontend/spa && npm run start",
+    "dev:catalog": "cd src/services/catalogapi && dotnet run",
+    "dev": "concurrently \"npm:dev:misc\" \"npm:dev:sso\" \"npm:dev:spa\" \"npm:dev:catalog\"",
+    "build:spa": "cd src/services/frontend && docker build -t frontend:latest .",
+    "build:catalog": "cd src/services/catalogapi && docker build -t catalogapi:latest .",
+    "build:sso": "cd src && docker compose build sso",
+    "minikube:hosts:windows": "echo $(minikube ip) webapptesting.com >> C:/Windows/System32/drivers/etc/hosts", 
+    "minikube:hosts:linux": "echo \"$(minikube ip) webapptesting.com\" | sudo tee -a /etc/hosts",
+    "minikube:registry": "minikube docker-env | Invoke-Expression"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

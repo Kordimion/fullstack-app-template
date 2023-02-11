@@ -1,51 +1,30 @@
 version: '3.4'
-
-volumes:
-    keycloak-data:
-
 services:
-
-  keycloak:
+  sso:
     image: sso
     build: 
-      context: sso
+      context: services/sso
       dockerfile: ./Dockerfile
+      args: 
+        - SUB_PATH=/
+        - HOSTNAME=localhost
+        - IS_PROXIED=false
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=postgres
+        - DB_HOST=localhost
+        - DB_NAME=keycloak
     volumes:
-      - ./sso/realm.json:/opt/keycloak/data/import/realm.json
+      - ./services/sso/realm.json:/opt/keycloak/data/import/realm.json
     environment:
-      - MAINPAGE_SPA_SECRET=AGVacqRHpG5PXbUXpaQ0kKiXartkh5LB
-    depends_on:
-      - keycloakdb
-
-  keycloakdb:
-    image: postgres:latest
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=keycloak
-    volumes:
-      - keycloak-data:/var/lib/postgresql/data
-  catalogapi:
-    image: catalogapi
-    build:
-      context: ./services/catalogapi
-      dockerfile: ./Dockerfile
-
-  frontend:
-    image: frontend
-    build:
-      context: ./frontend
-      dockerfile: ./Dockerfile
-    volumes:
-      - ./frontend/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
-      - ./frontend/nginx/security.conf:/etc/nginx/security.conf
-      - ./frontend/nginx/proxy.conf:/etc/nginx/proxy.conf
-      - ./etc/certs/https.crt:/etc/nginx/certs/https.crt
-      - ./etc/certs/key.pem:/etc/nginx/certs/key.pem
-    environment:
-    - BACKEND_CATALOG=catalogapi
-    - BASE_URL=localhost
-    - BACKEND_IDENTITY=keycloak
+      - MAINPAGE_SPA_CLIENT_SECRET=AGVacqRHpG5PXbUXpaQ0kKiXartkh5LB
+      - MAINPAGE_SPA_CLIENT_HREF=http://localhost:3000/
+      - MAINPAGE_SPA_CLIENT_REDIRECT_URI=http://localhost:3000/
+    command: start-dev --import-realm 
     ports:
-      - 80:80
-      - 443:443
+      - 8080:8080
+      - 8443:8443  
+
+
+
+
+    

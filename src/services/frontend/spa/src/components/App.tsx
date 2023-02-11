@@ -12,9 +12,6 @@ function App() {
   let AuthButton = (!!userInfo ? 
     <button onClick={auth.signOutRedirect}>logout</button> 
     : <button onClick={auth.signIn}>login</button>)
-  
-  console.log(accessToken);
-
 
   let UserInfoBlock = withAuth(props => {
     return (
@@ -40,7 +37,7 @@ function App() {
           "Authorization": `Bearer ${accessToken}`
         }
 
-      const res = await fetch(`https://localhost/api/catalog/WeatherForecast/`, fetchSettings);
+      const res = await fetch(`/api/catalog/WeatherForecast/`, fetchSettings);
       const txt = await res.text();
       setWeather(txt);
     }}>Get Weather</button> 

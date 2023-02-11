@@ -21,6 +21,6 @@ build-containers-branch:
     - *before-script
   script:
     - echo $CI_REGISTRY_IMAGE
-    - docker build -t $CI_REGISTRY_IMAGE/webapp:$DOCKER_TAG ./src/services/catalogapi -f ./src/services/catalogapi/Dockerfile
-    - docker push $CI_REGISTRY_IMAGE/webapp:$DOCKER_TAG
+    - docker build -t $CI_REGISTRY_IMAGE/catalogapi:$DOCKER_TAG ./src/services/catalogapi -f ./src/services/catalogapi/Dockerfile
+    - docker push $CI_REGISTRY_IMAGE/catalogapi:$DOCKER_TAG
 

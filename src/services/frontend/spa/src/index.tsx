@@ -3,15 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
+import { authority, redirectUri, clientId, clientSecret } from "./constants";
 
 import { AuthProviderProps, AuthProvider } from "oidc-react";
 
 const oidcConfig : AuthProviderProps = {
-  authority: "https://localhost/identity/realms/shop",
-  clientId: 'mainpage.spa.client',
+  authority: authority,
+  clientId: clientId,
   scope: "catalog.api.read openid profile",
-  clientSecret: "AGVacqRHpG5PXbUXpaQ0kKiXartkh5LB",
-  redirectUri: "https://localhost/redirect/",
+  clientSecret: clientSecret,
+  redirectUri: redirectUri,
   autoSignIn: false,
 };
 

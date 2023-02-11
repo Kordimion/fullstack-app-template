@@ -9,6 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
+var pathbase = builder.Configuration["PathBase"];
+var authority = builder.Configuration["Auth:Authority"];
+var spaHref = builder.Configuration["Cors:SpaHref"] ?? "";
+
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -18,7 +24,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
         options.RequireHttpsMetadata = false;
-        options.Authority = "http://keycloak:8080/identity/realms/shop";
+        options.Authority = authority;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false
@@ -52,23 +58,26 @@ fhOptions.KnownProxies.Clear();
 fhOptions.KnownNetworks.Clear();
 
 IdentityModelEventSource.ShowPII = true;
-
+if(!spaHref.IsNullOrEmpty() && spaHref != "/") {
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy  =>
         {
-            policy.WithOrigins("https://localhost/")
+            policy.WithOrigins(spaHref)
             .AllowAnyHeader()
             .AllowAnyMethod();
         });
 });
+}
+
 
 var app = builder.Build();
 
 
 app.UseForwardedHeaders(fhOptions);
-app.UsePathBase("/api/catalog");
+if(!pathbase.IsNullOrEmpty())
+    app.UsePathBase("/api/catalog");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -76,22 +85,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else {
-    
-}
 
 
 app.UseCors();
 
 app.UseAuthentication();
-app.Use(async (context, next) =>
-    {
-        // Do loging
-        // Do work that doesn't write to the Response.
-        System.Console.WriteLine(string.Join(", ",context.User.Claims.Select(i => i.ToString())));
-        await next.Invoke();
-        // Do logging or other work that doesn't write to the Response.
-    });
 app.UseAuthorization();
 
 app.MapControllers();
