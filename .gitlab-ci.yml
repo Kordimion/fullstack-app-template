@@ -1,0 +1,26 @@
+image: docker:dind
+
+stages:
+  - build
+
+.before-script: &before-script
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  - echo $SHARE_RUNNER_T57
+  # TODO for prod environment
+  #- export NS_BASE_URL=$(if [[ $CI_ENVIRONMENT_NAME = production ]]; then echo "docker.neva.loc"; else echo "docker.neva.loc"; fi) 
+  # TODO for prod environment
+  #- export DOCKER_TAG=$(echo $CI_COMMIT_BRANCH | sed 's#/#_#g')-$CI_COMMIT_SHORT_SHA
+  - export DOCKER_TAG=latest
+  - export DOCKER_REGISTRY=$CI_REGISTRY_IMAGE
+
+build-containers-branch:
+  stage: build
+  tags: 
+    - $SHARE_RUNNER_T57
+  before_script:
+    - *before-script
+  script:
+    - echo $CI_REGISTRY_IMAGE
+    - docker build -t $CI_REGISTRY_IMAGE/webapp:$DOCKER_TAG ./src/services/catalogapi -f ./src/services/catalogapi/Dockerfile
+    - docker push $CI_REGISTRY_IMAGE/webapp:$DOCKER_TAG
+
