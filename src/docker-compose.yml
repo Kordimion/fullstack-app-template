@@ -1,28 +1,45 @@
 version: '3.4'
+
+volumes:
+    keycloak-data:
+    
 services:
+  keycloakdb:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=keycloak
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data\
+    ports:
+      - 5432:5432
   sso:
-    image: sso
-    build: 
-      context: services/sso
-      dockerfile: ./Dockerfile
-      args: 
-        - SUB_PATH=/
-        - HOSTNAME=localhost
-        - IS_PROXIED=false
-        - DB_USERNAME=postgres
-        - DB_PASSWORD=postgres
-        - DB_HOST=localhost
-        - DB_NAME=keycloak
+    image: quay.io/keycloak/keycloak:latest
     volumes:
       - ./services/sso/realm.json:/opt/keycloak/data/import/realm.json
     environment:
       - MAINPAGE_SPA_CLIENT_SECRET=AGVacqRHpG5PXbUXpaQ0kKiXartkh5LB
       - MAINPAGE_SPA_CLIENT_HREF=http://localhost:3000/
       - MAINPAGE_SPA_CLIENT_REDIRECT_URI=http://localhost:3000/
-    command: start-dev --import-realm 
+      - KC_FEATURES='token-exchange scripts'
+      - KC_DB=postgres
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=postgres
+      - KC_DB_URL=jdbc:postgresql://keycloakdb/keycloak
+      - KC_HOSTNAME=localhost
+      - PROXY_ADDRESS_FORWARDING=true
+      - KC_HTTP_ENABLED=true
+      - KC_HTTP_RELATIVE_PATH=/identity/
+      - KC_HOSTNAME_STRICT=false
+    command: start-dev --import-realm
     ports:
       - 8080:8080
       - 8443:8443  
+    depends_on: 
+      - keycloakdb
 
 
 

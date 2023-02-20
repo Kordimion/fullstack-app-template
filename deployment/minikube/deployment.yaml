@@ -92,8 +92,10 @@ spec:
     spec: # pod image settings
       containers:
       - name: sso
-        image: sso:latest
+        image: quay.io/keycloak/keycloak:latest
         imagePullPolicy: IfNotPresent
+        command: ["start"]
+        args: ["--db", "postgres", "--db-url-host", "kubernetes.docker.internal", "--db-password", "postgres"]
         ports:
         - containerPort: 8080
 ---
